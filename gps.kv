@@ -1,0 +1,77 @@
+#: kivy 1.0.9
+
+
+<GpsDiag>:
+
+    Label:
+        font_size: 40
+        pos: 350,400
+        text: 'GPS Navigation'
+        id: label_title
+
+
+    Button:
+        text: 'X'
+        font_size: 32
+        color: 1,0,0,1
+        pos: 750, 430
+        size: 50, 50
+        id: but_Exit
+        on_release: root.exit(but_Exit)
+
+    Button:
+        text: 'Connect'
+        size: 100,50
+        pos: 0,0
+        id: but_Connect
+
+    Button:
+        text: 'MPH'
+        size: 100,100
+        pos: 300,100
+        id: but_MPH
+
+
+    Button:
+        text: 'RPM'
+        size: 100,100
+        pos: 300,250
+        id: but_RPM
+
+    Button:
+        text: 'TEMP'
+        size: 100,100
+        pos: 415, 250
+        id: but_TEMP
+
+    Button:
+        text: 'BOOST'
+        size: 100,100
+        pos: 415, 100
+        id: but_G1
+
+    Label:
+        font_size: 12
+        pos: 50,50
+        text: 'Value 1'
+        id: label_val1
+
+    Label:
+        font_size: 12
+        pos: 50,62
+        text: 'Value 2'
+        id: label_val2
+
+    Label:
+        font_size: 12
+        pos: 50,74
+        text: 'Value 3'
+        id: label_val3
+
+    Label:
+        font_size: 12
+        pos: 50,86		# X , Y
+        text: 'Value 4'
+        id: label_val4
+
+	
