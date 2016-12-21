@@ -12,6 +12,19 @@ GSV1 = '$GPGSV,3,1,12,05,83,111,15,12,54,222,21,02,49,038,28,25,44,287,22*74'
 GSV2 = '$GPGSV,3,2,12,20,35,219,25,29,26,317,,06,17,063,21,19,13,116,23*73'
 GSV3 = '$GPGSV,3,3,12,13,12,152,10,15,04,182,19,09,02,041,,36,,,*44'
 
+
+GSA1 = '$GPGSA,A,3,19,25,12,02,20,05,06,13,,,,,1.36,1.04,0.88*0E'
+
+GGA1 = '$GPGGA,140921.000,3019.4463,N,09527.9966,W,2,08,1.04,79.2,M,-23.7,M,0000,0000*6F'
+
+RMC1 = '$GPRMC,140921.000,A,3019.4463,N,09527.9966,W,0.07,216.46,281116,,,D*7C'
+
+# Test VTG Sentence
+VTG1 = '$GPVTG,216.46,T,,M,0.07,N,0.13,K,D*3A'
+
+
+
+
 class GsvData():
     num_sats = 0
     num_sentance = 0
@@ -19,10 +32,74 @@ class GsvData():
     PRN_2 = ['0','0','0','0']
     PRN_3 = ['0','0','0','0']
     PRN_4 = ['0','0','0','0']
-    
-    
-    
-    testdata = "Testing"
+      
+class VtgData():
+	true_track = 0
+	magnetic_track = 0
+	ground_speed_knots = 0 
+	ground_speed_kph = 0 
+	
+class GsaData():
+	fix_mode = 0 
+	num_sats_used = 0 
+	PDOP = 0			#Dilution Of Precision
+	HDOP = 0			#Hozizontal Dilustion of Precision
+	VDOP = 0 			#Vertical Dilustion Of Precision
+
+class GgaData():
+    fix_time = 0
+    lat = 0
+    lon = 0 
+    fix_quality = 0 
+    sat_num_track = 0
+    altitude_feet = 0 
+    altitude_meters = 0 
+	
+	
+
+class RmcData():
+	rmc_time = 0
+	rmc_status = 0
+	rmc_lat = 0 
+	rmc_lon = 0
+	rmc_spd = 0 
+	track_angle = 0
+	rmc_date = 0
+	
+def processGGA():
+	gga.fix_time = msgP.data[1]
+	gga.lat = " ".join(msgP.data[1:3])
+	gga.lon = " ".join(msgP.data[3:5])
+	gga.fix_quality = msgP.data[5]
+	gga.sat_num_track = msgP.data[6]
+	gga.altitude_meters = msgP.data[8] + " Meters"
+	gga.altitude_feet = str(round(float(msgP.data[8])*3.28084)) + " Feet"
+	
+def processGSA():
+    gsa.fix_mode = msgP.data[0]
+    gsa.fix_type = msgP.data[1]
+	
+	
+	
+def processRMC():
+	rmc.rmc_date = '-'.join([msgP.data[8][:2], msgP.data[8][2:4], msgP.data[8][4:]])
+	rmc.rmc_time = ':'.join([msgP.data[0][:2], msgP.data[0][2:4], msgP.data[0][4:6]])+ " UTC"
+	rmc.rmc_status = msgP.data[1]
+	rmc.rmc_lat = " ".join(msgP.data[2:4])
+	rmc.rmc_lon = " ".join(msgP.data[4:6])
+	rmc.rmc_spd = msgP.data[6] + " Knots"
+	rmc.track_angel= msgP.data[7] + " Degrees"
+	
+
+def processVTG():
+    vtg.true_track = " ".join(msgP.data[0:2])
+    vtg.magnetic_track = " ".join(msgP.data[2:4])
+    vtg.ground_speed_knots = str(round(msgP.data[4])) + " Knots"
+    vtg.ground_speed_kph = str(round(msgP.data[6])) + " KPH"
+    vtg.ground_speed_mph = str(round(float(msgP.data[6])/1.60934)) + " MPH"
+
+	
+	
     
 def processGSV():
     if msgP.data[1] == '1':
@@ -68,7 +145,12 @@ gsv1 = GsvData()        ## Holder For Sentence 1
 gsv2 = GsvData()        ## Holder For Sentence 2
 gsv3 = GsvData()        ## Holder For Sentence 3
 
-msgP = pynmea2.parse(GSV1)       
+rmc = RmcData()
+vtg = VtgData()
+gsa = GsaData()
+gga = GgaData()
+
+msgP = pynmea2.parse(GGA1)       
 
 t = threading.Thread(target= timer1)
 
